@@ -1,7 +1,6 @@
 package ru.rabiarill;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -24,9 +23,9 @@ public class Main {
 
    public static List<String> readFile(String filePath) {
       try {
-         return Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)
-                 .filter(line ->  line.matches("^(\"\\d*\")(;\"\\d*\")*$"))
+         return Files.lines(Paths.get(filePath))
                  .map(line -> line.replace("\"", ""))
+                 .filter(line ->  line.matches("^(\\d*\\.{1}\\d)?;?(;\\d*\\.{1}\\d)*;?$"))
                  .toList();
       } catch (IOException e) {
          throw new RuntimeException(e);
@@ -34,7 +33,7 @@ public class Main {
    }
 
    public static void writeFile(Set<Set<String>> dataToWrite, String filePath){
-      filePath = filePath.replace(".txt", "-result.txt");
+      filePath = filePath.replace(".csv", "-result.csv");
 
       List<Set<String>> sortedSets = new ArrayList<>(dataToWrite);
       Comparator<Set<String>> comparator = (set1, set2) -> Integer.compare(set2.size(), set1.size());
